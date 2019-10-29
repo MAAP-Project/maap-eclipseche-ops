@@ -1,6 +1,6 @@
 # MAAP Eclipse Che Operations Guide
 
-This guide is intended for devops members of MAAP to provide instructions for configuring and deploying the MAAP ADE
+This guide is intended to provide devops members of MAAP instructions for configuring and deploying the MAAP ADE.
 
 ## Intended Use
 
