@@ -1,0 +1,100 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1beta2","kind":"DaemonSet","metadata":{"annotations":{},"labels":{"microk8s-application":"nginx-ingress-microk8s"},"name":"nginx-ingress-microk8s-controller","namespace":"default"},"spec":{"selector":{"matchLabels":{"name":"nginx-ingress-microk8s"}},"template":{"metadata":{"labels":{"name":"nginx-ingress-microk8s"}},"spec":{"containers":[{"args":["/nginx-ingress-controller","--default-backend-service=$(POD_NAMESPACE)/default-http-backend","--configmap=$(POD_NAMESPACE)/nginx-load-balancer-conf"],"env":[{"name":"POD_NAME","valueFrom":{"fieldRef":{"fieldPath":"metadata.name"}}},{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}}],"image":"quay.io/kubernetes-ingress-controller/nginx-ingress-controller-amd64:0.15.0","livenessProbe":{"httpGet":{"path":"/healthz","port":10254,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":5},"name":"nginx-ingress-microk8s","ports":[{"containerPort":80},{"containerPort":443}]}],"hostNetwork":true,"serviceAccountName":"nginx-ingress-microk8s-serviceaccount","terminationGracePeriodSeconds":60}}}}
+  creationTimestamp: 2019-10-03T23:21:25Z
+  generation: 2
+  labels:
+    microk8s-application: nginx-ingress-microk8s
+  name: nginx-ingress-microk8s-controller
+  namespace: default
+  resourceVersion: "4147778"
+  selfLink: /apis/extensions/v1beta1/namespaces/default/daemonsets/nginx-ingress-microk8s-controller
+  uid: 84fb8ef2-e634-11e9-a9dc-125a10c5050e
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      name: nginx-ingress-microk8s
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: nginx-ingress-microk8s
+    spec:
+      containers:
+      - args:
+        - /nginx-ingress-controller
+        - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
+        - --configmap=$(POD_NAMESPACE)/nginx-load-balancer-conf
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller-amd64:0.15.0
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - sleep 20; mv /ingress-controller/ssl/default-fake-certificate.pem
+                /ingress-controller/ssl/default-fake-certificate-original.pem && ln
+                -s /ingress-controller/ssl/default-che-tls.pem /ingress-controller/ssl/default-fake-certificate.pem;
+                sleep 5; /usr/sbin/nginx -s reload;
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 10254
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: nginx-ingress-microk8s
+        ports:
+        - containerPort: 80
+          hostPort: 80
+          protocol: TCP
+        - containerPort: 443
+          hostPort: 443
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: nginx-ingress-microk8s-serviceaccount
+      serviceAccountName: nginx-ingress-microk8s-serviceaccount
+      terminationGracePeriodSeconds: 60
+  templateGeneration: 2
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+status:
+  currentNumberScheduled: 1
+  desiredNumberScheduled: 1
+  numberAvailable: 1
+  numberMisscheduled: 0
+  numberReady: 1
+  observedGeneration: 2
+  updatedNumberScheduled: 1 
