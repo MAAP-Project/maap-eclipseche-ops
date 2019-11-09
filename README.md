@@ -45,7 +45,7 @@ sudo helm dependency update
 # Install certs, remember to update with real email in yaml file. Also update to v2 of acme: https://acme-v02.api.letsencrypt.org/directory
 sudo helm install --name cert-manager jetstack/cert-manager --set createCustomResource=false
 sudo helm upgrade --install cert-manager jetstack/cert-manager --set createCustomResource=true --version 0.10.1
-sudo helm upgrade --install che --namespace default --set global.multiuser=true --set global.serverStrategy=single-host --set global.ingressDomain=ade.maap-project.org --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls ./
+sudo helm upgrade --install che --namespace default --set global.multiuser=true --set global.serverStrategy=single-host --set global.ingressDomain=ade.maap-project.org --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls --set global.metricsEnabled=true ./
 
 # To completely reset the system (you probably don't need this):
 sudo helm del --purge che
