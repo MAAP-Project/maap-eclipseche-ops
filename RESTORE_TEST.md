@@ -30,7 +30,7 @@ In the EC2 Dashboard 'INSTANCES' menu, select the test ADE VM. Then open the Act
 
 ### Step 4) Restore the VM (`Administrator`)
 
-Use the [Restore](RESTORE_TEST.md) guide to run the recovery process.
+Use the [Restore guide](RESTORE_TEST.md) to run the recovery process.
 
 ### Step 5) Verify the workspace files have been restored (`Tester`)
 
