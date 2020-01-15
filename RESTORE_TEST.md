@@ -1,6 +1,6 @@
 # Steps to test the MAAP ADE restoration procedure
 
-When restoring the MAAP ADE from a snapshot, the following operational steps, along with testing requirements, are to be taken. These steps ensure that data is properly restored both within the persisted volumes of the ADE workspaces, which are backed up externally, as well as any ephemeral data outside the persistent volumes within ADE workspaces. 
+When restoring the MAAP ADE from a snapshot, the following operational steps, along with testing requirements, are to be taken. These steps ensure that data is properly restored both within the persisted volumes of the ADE workspaces, which are backed up externally, as well as any ephemeral data outside the persistent volumes of ADE workspaces. 
 
 This guide includes two separate roles for performing the steps, `Administrator` and `Tester`.
 
