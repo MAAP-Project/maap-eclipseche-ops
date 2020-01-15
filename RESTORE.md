@@ -50,7 +50,9 @@ sudo iptables -F
 ### Step 4) [NEW DNS ONLY] Update helm with new DNS
 
 ```bash
-sudo helm upgrade che che --namespace default --set global.multiuser=true --set global.serverStrategy=single-host --set global.ingressDomain=<public.DNS.of.host> --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls --set global.metricsEnabled=true —-dry-run
+ade_host='?'
+
+sudo helm upgrade --install che --namespace default --set global.multiuser=true --set global.serverStrategy=single-host --set global.ingressDomain=$ade_host --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls --set global.metricsEnabled=true —-dry-run
 ```
 
 ### Step 5) Restart microk8s
