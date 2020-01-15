@@ -14,6 +14,10 @@ These instructions have been tested on EC2 VMs running Ubuntu 18.04.
 
 [RESTORE.md](RESTORE.md)
 
+### Restoring From Backup - Test Procedure
+
+[RESTORE_TEST.md](RESTORE_TEST.md)
+
 ### Configuration for Nginx Ingress Controller
 
 By default, MicroK8s installs a temporary, insecure ssl certificate that needs to be replaced during the [Nginx Ingress](https://github.com/ubuntu/microk8s/blob/1.12/microk8s-resources/actions/ingress.yaml#L66) node startup process. We address this by adding post-start execution commands to point to the secure certificate. Once Che is fully configured, run the following command:
