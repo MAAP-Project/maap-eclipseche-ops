@@ -7,7 +7,7 @@ ade_host='?'
 sudo apt-get update
 sudo apt-get -y dist-upgrade
 sudo snap install microk8s --classic --channel=1.13/stable
-sudo snap install helm --classic --channel=stable
+sudo snap install helm --classic --channel=2.15/stable
 
 git clone https://github.com/eclipse/che
 cd che/deploy/kubernetes/helm/che
