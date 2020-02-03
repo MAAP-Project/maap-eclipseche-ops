@@ -40,6 +40,16 @@ sudo helm install --name cert-manager jetstack/cert-manager --set createCustomRe
 sudo helm upgrade --install cert-manager jetstack/cert-manager --set createCustomResource=true --version 0.10.1
 sudo helm upgrade --install che --namespace default --set global.multiuser=true --set global.serverStrategy=single-host --set global.ingressDomain=$ade_host --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls --set global.metricsEnabled=true ./
 
+# Enable privileges
+/var/snap/microk8s/current/args/kubelet
+/var/snap/microk8s/current/args/kube-apiserver
+append --allow-privileged
+restart both services:
+sudo systemctl restart snap.microk8s.daemon-apiserver
+sudo systemctl restart snap.microk8s.daemon-kubelet
+
+
+
 # To completely reset the system (you probably don't need this):
 sudo helm del --purge che
 sudo microk8s.reset
