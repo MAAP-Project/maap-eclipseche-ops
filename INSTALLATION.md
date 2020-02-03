@@ -21,6 +21,7 @@ sudo iptables -P INPUT ACCEPT
 sudo iptables -P OUTPUT ACCEPT
 sudo iptables -P FORWARD ACCEPT # for dns propogation
 sudo iptables -F
+sudo apt-get install iptables-persistent
 
 sudo microk8s.kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
 sudo microk8s.kubectl create serviceaccount tiller --namespace kube-system
