@@ -9,11 +9,9 @@ sudo apt-get -y dist-upgrade
 sudo snap install microk8s --classic --channel=1.13/stable
 sudo snap install helm --classic --channel=2.15/stable
 
-git clone https://github.com/eclipse/che
+git clone https://mas.maap-project.org/root/che
 cd che/deploy/kubernetes/helm/che
-git checkout tags/6.19.6
-git branch 6.19.6-maap
-# update yaml as needed
+# yaml default values can be used as-is or updated as needed
 
 sudo microk8s.enable ingress; sleep 5;
 sudo microk8s.enable storage; sleep 5;
@@ -37,7 +35,7 @@ sudo helm repo add jetstack https://charts.jetstack.io
 sudo helm repo update
 sudo helm dependency update
 
-# Install certs, remember to update with real email in yaml file. Also update to v2 of acme: https://acme-v02.api.letsencrypt.org/directory
+# Install certs
 sudo helm install --name cert-manager jetstack/cert-manager --set createCustomResource=false
 sudo helm upgrade --install cert-manager jetstack/cert-manager --set createCustomResource=true --version 0.10.1
 sudo helm upgrade --install che --namespace default --set global.multiuser=true --set global.serverStrategy=single-host --set global.ingressDomain=$ade_host --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls --set global.metricsEnabled=true ./
