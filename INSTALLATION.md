@@ -6,7 +6,7 @@ ade_host='?'
 
 sudo apt-get update
 sudo apt-get -y dist-upgrade
-sudo snap install microk8s --classic --channel=1.13/stable
+sudo snap install microk8s --classic --channel=1.12/stable
 wget https://get.helm.sh/helm-v2.14.0-linux-amd64.tar.gz
 tar -zxvf helm-v2.14.0-linux-amd64.tar.gz 
 sudo mv linux-amd64/helm /usr/local/bin/helm
@@ -15,9 +15,10 @@ git clone https://mas.maap-project.org/root/che
 cd che/deploy/kubernetes/helm/che
 # yaml default values can be used as-is or updated as needed
 
-sudo microk8s.enable ingress; sleep 5;
-sudo microk8s.enable storage; sleep 5;
-sudo microk8s.enable dns
+sudo microk8s.enable ingress; sleep 1;
+sudo microk8s.enable storage; sleep 1;
+sudo microk8s.enable dns; sleep 1;
+sudo microk8s.enable registry
 
 sudo iptables -P INPUT ACCEPT
 sudo iptables -P OUTPUT ACCEPT
@@ -39,9 +40,9 @@ sudo helm repo update
 sudo helm dependency update
 
 # Install certs
-sudo helm install --name cert-manager --version v0.10.1 jetstack/cert-manager --set createCustomResource=false
-sudo helm upgrade --install cert-manager jetstack/cert-manager --set createCustomResource=true --version v0.10.1
-sudo helm upgrade --install che --namespace default --set global.multiuser=true --set global.serverStrategy=single-host --set global.ingressDomain=$ade_host --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls --set global.metricsEnabled=true ./
+sudo helm install --name cert-manager jetstack/cert-manager --set createCustomResource=false
+sudo helm upgrade --install cert-manager jetstack/cert-manager --set createCustomResource=true --version 0.10.1
+sudo helm upgrade --install che --namespace default --set global.multiuser=true --set global.serverStrategy=single-host --set global.ingressDomain=$ade_host --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls ./
 
 # Enable privileges
 /var/snap/microk8s/current/args/kubelet
