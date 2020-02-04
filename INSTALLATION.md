@@ -37,8 +37,8 @@ sudo helm repo update
 sudo helm dependency update
 
 # Install certs
-sudo helm install --name cert-manager --version v0.12.0 jetstack/cert-manager --set createCustomResource=false
-sudo helm upgrade --install cert-manager jetstack/cert-manager --set createCustomResource=true --version 0.10.1
+sudo helm install --name cert-manager --version v0.10.1 jetstack/cert-manager --set createCustomResource=false
+sudo helm upgrade --install cert-manager jetstack/cert-manager --set createCustomResource=true --version v0.10.1
 sudo helm upgrade --install che --namespace default --set global.multiuser=true --set global.serverStrategy=single-host --set global.ingressDomain=$ade_host --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls --set global.metricsEnabled=true ./
 
 # Enable privileges
