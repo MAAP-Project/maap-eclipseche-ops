@@ -7,8 +7,8 @@ ade_host='?'
 sudo apt-get update
 sudo apt-get -y dist-upgrade
 sudo snap install microk8s --classic --channel=1.12/stable
-wget https://get.helm.sh/helm-v2.14.0-linux-amd64.tar.gz
-tar -zxvf helm-v2.14.0-linux-amd64.tar.gz 
+wget https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz
+tar -zxvf helm-v2.14.3-linux-amd64.tar.gz 
 sudo mv linux-amd64/helm /usr/local/bin/helm
 
 git clone https://mas.maap-project.org/root/che
