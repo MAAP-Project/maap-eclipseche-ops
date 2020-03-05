@@ -1,68 +1,38 @@
-## Command sequence for installing and configuring Eclipse Che
+# Steps to install the MAAP ADE on a newly provisioned EC2 instance
 
-```bash
-# The host name for the ADE server.
-ade_host='?'
+This guide assumes that the core MAAP systems are configured and operational:
+- [CAS service integrated with URS](https://github.com/MAAP-Project/maap-auth-cas)
+- [CMR](https://github.com/MAAP-Project/maap-cmr)
+- [CORE API](https://github.com/MAAP-Project/maap-api-nasa)
+- DPS
+- MAS
 
-sudo apt-get update
-sudo apt-get -y dist-upgrade
-sudo snap install microk8s --classic --channel=1.12/stable
-wget https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz
-tar -zxvf helm-v2.14.3-linux-amd64.tar.gz 
-sudo mv linux-amd64/helm /usr/local/bin/helm
+### 1) Install Eclipse Che and its dependencies
 
-git clone https://mas.maap-project.org/root/che
-cd che/deploy/kubernetes/helm/che
-# yaml default values can be used as-is or updated as needed
+Follow the [Setup Commands document](setup-commands.md) script to install Eclipse Che and configure the host server. NOTE: prior to starting this step, a DNS name for the host server must be configured in order for Che to set up its required SSL certificates.
 
-sudo microk8s.enable ingress; sleep 1;
-sudo microk8s.enable storage; sleep 1;
-sudo microk8s.enable dns; sleep 1;
-sudo microk8s.enable registry
+### 2) Restart Keycloak and Che pods if necessary
 
-sudo iptables -P INPUT ACCEPT
-sudo iptables -P OUTPUT ACCEPT
-sudo iptables -P FORWARD ACCEPT # for dns propogation
-sudo iptables -F
-sudo apt-get install iptables-persistent
+Once Step 1 is complete, give Che a few minutes to start all of the system pods in the default namespace. The following command will provide the status of these pods: `microk8s.kubectl get pods`.
 
-sudo microk8s.kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
-sudo microk8s.kubectl create serviceaccount tiller --namespace kube-system
-sudo microk8s.kubectl apply -f ./tiller-rbac.yaml
-sudo helm init --service-account tiller --wait
+In the event that the Che and/or Keycloak pods are not fully operational after several minutes, delete the Keycloak pod and wait for a new Keycloak pod to fully start. Once a new Keycloak pod is online, delete the Che pod. After another minute, all pods should be fully operational.
 
-# Get latest cert-manager, https://docs.cert-manager.io/en/latest/getting-started/install/kubernetes.html
-sudo microk8s.kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.10/deploy/manifests/00-crds.yaml
-sudo microk8s.kubectl label namespace default certmanager.k8s.io/disable-validation=true
+These additional steps are the result of a [known issue in our version of Che](https://github.com/eclipse/che/issues/13838).
 
-sudo helm repo add jetstack https://charts.jetstack.io
-sudo helm repo update
-sudo helm dependency update
+### 3) Configure Keycloak
 
-# Install certs
-sudo helm install --name cert-manager jetstack/cert-manager --set createCustomResource=false
-sudo helm upgrade --install cert-manager jetstack/cert-manager --set createCustomResource=true --version 0.10.1
-sudo helm upgrade --install che --namespace default --set global.multiuser=true --set global.serverStrategy=single-host --set global.ingressDomain=$ade_host --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls ./
+By default, Keycloak is not configured to connect with any identity providers. For now, we use these manual steps to connect Keycloak to the MAAP CAS server:
 
-# Enable privileges
-/var/snap/microk8s/current/args/kubelet
-/var/snap/microk8s/current/args/kube-apiserver
-append --allow-privileged
-restart both services:
-sudo systemctl restart snap.microk8s.daemon-apiserver
-sudo systemctl restart snap.microk8s.daemon-kubelet
+- Navigate to `<new host name>/auth/admin/master/console/#/realms/che`
+- Login with your admin credentials
+- In the 'Realm Settings' tab, navigate to 'Themes', and change the Admin Console Theme to 'Keycloak Extended'
+- Signout
+- Login with your admin credentials again
+- Navigate to Identity Providers
+- Add provider CAS
+- Configure CAS Provider
+- After saving, create Attribute Mapper entries for email, firstName, lastName and proxyTicket
 
+### 4) Test
 
-
-# To completely reset the system (you probably don't need this):
-sudo helm del --purge che
-sudo microk8s.reset
-sudo snap remove microk8s --purge
-sudo snap remove helm --purge
-sudo rm -rf ~/.helm/
-sudo rm -rf ~/snap/
-
-# Why we don't use Kubernetes 1.16 and stay on 1.13/stable
-https://github.com/ubuntu/microk8s/issues/198
-https://github.com/helm/helm/issues/6374
-```
+To validate the install, navigate to the Che login page, sign in using MAAP, and create a workspace using a MAAP Stack. Verify that the new workspace loads with no errors.
