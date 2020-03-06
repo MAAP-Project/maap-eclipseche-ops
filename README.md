@@ -11,8 +11,7 @@ This guide assumes that the core MAAP systems are configured and operational:
 - DPS
 - MAS
 
-**Host environment**
-These instructions have been tested on EC2 VMs running Ubuntu version >= 18.04. 
+**Host environment**: these instructions have been tested on EC2 VMs running Ubuntu version >= 18.04. 
 
 ### Installation Guide
 
