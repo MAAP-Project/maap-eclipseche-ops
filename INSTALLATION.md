@@ -33,15 +33,21 @@ By default, Keycloak is not configured to connect with any identity providers. F
 - Configure CAS Provider
 - After saving, create Attribute Mapper entries for email, firstName, lastName and proxyTicket
 
-### 4) Test Eclipse Che
-
-To validate the install, navigate to the Che login page, sign in using MAAP, and create a workspace using a MAAP Stack. Verify that the new workspace loads with no errors.
-
-### 5) Login to the MAS docker registry
+### 4) Login to the MAS docker registry
 
 In order to pull MAAP-provisioned Docker images from Eclipse Che, we need to grant Docker access to the registry corresponding to the dev/ops environment where this ADE instance is running. For example: `microk8s.docker login registry.nasa.maap.xyz`
 
-### 6) Configure ESDC iframe proxy
+### 5) Import MAAP Stacks into Che
+
+**TODO: automate this step as part of the Eclipse Che Docker image setup scripts**
+
+For now, this is done by copying the existing list of MAAP stack raw configurations from another MAAP environment, and sharing the newly imported stacks to all Che users using these instructions: https://github.com/MAAP-Project/maap-jupyter-ide#creating-and-sharing-stacks
+
+### 6) Test MAAP Stack(s)
+
+To validate the install, navigate to the Che login page, sign in using MAAP, and create a workspace using a MAAP Stack. Verify that the new workspace loads with no errors.
+
+### 7) Configure ESDC iframe proxy
 
 The ESDC application is used within MAAP workspaces and must be setup using a reverse proxy to a running MAAP ESDC site.
 
