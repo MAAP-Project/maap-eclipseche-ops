@@ -3,8 +3,8 @@
 ```bash
 # The host name for the ADE server.
 ade_host='?'
-KOPS_CLUSTER_NAME=$ade_host
-KOPS_STATE_STORE=$ade_host
+export KOPS_CLUSTER_NAME=$ade_host
+export KOPS_STATE_STORE=$ade_host
 
 sudo apt-get update
 sudo apt-get -y dist-upgrade
