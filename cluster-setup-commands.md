@@ -18,8 +18,8 @@ sudo apt install awscli
 aws configure
 aws s3 mb s3://$ade_host
 
-kops create secret --name $ade_host sshpublickey admin -i ~/.ssh/authorized_keys 
 kops create cluster --zones=us-east-1a --name=$ade_host
+kops create secret --name $ade_host sshpublickey admin -i ~/.ssh/authorized_keys 
 kops update cluster --name $ade_host --yes
 
 # Ensure cluster is ready 
