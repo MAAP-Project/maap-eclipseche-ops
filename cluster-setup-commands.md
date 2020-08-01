@@ -4,7 +4,7 @@
 # The host name for the ADE server.
 ade_host='?'
 export KOPS_CLUSTER_NAME=$ade_host
-export KOPS_STATE_STORE=$ade_host
+export KOPS_STATE_STORE=s3://${ade_host}
 
 sudo apt-get update
 sudo apt-get -y dist-upgrade
@@ -14,6 +14,12 @@ curl -LO https://github.com/kubernetes/kops/releases/download/$(curl -s https://
 chmod +x kops-linux-amd64
 sudo mv kops-linux-amd64 /usr/local/bin/kops
 
+# Install kubectl
+curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+kubectl version --client
+
 # configure aws if not running from an ec2 instance with the required iam permissions attached
 sudo apt install awscli
 aws configure
@@ -21,6 +27,9 @@ aws configure
 # create kops bucket and enable versioning
 aws s3 mb s3://$ade_host
 aws s3api put-bucket-versioning --bucket ${ade_host} --versioning-configuration Status=Enabled
+
+export KOPS_CLUSTER_NAME=imesh.k8s.local
+export KOPS_STATE_STORE=s3://${bucket_name}
 
 kops create cluster --zones=us-east-1a --name=$ade_host
 kops create secret --name $ade_host sshpublickey admin -i ~/.ssh/authorized_keys 
