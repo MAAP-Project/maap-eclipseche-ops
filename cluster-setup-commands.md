@@ -14,9 +14,13 @@ curl -LO https://github.com/kubernetes/kops/releases/download/$(curl -s https://
 chmod +x kops-linux-amd64
 sudo mv kops-linux-amd64 /usr/local/bin/kops
 
+# configure aws if not running from an ec2 instance with the required iam permissions attached
 sudo apt install awscli
 aws configure
+
+# create kops bucket and enable versioning
 aws s3 mb s3://$ade_host
+aws s3api put-bucket-versioning --bucket ${ade_host} --versioning-configuration Status=Enabled
 
 kops create cluster --zones=us-east-1a --name=$ade_host
 kops create secret --name $ade_host sshpublickey admin -i ~/.ssh/authorized_keys 
