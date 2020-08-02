@@ -20,8 +20,9 @@ chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 kubectl version --client
 
-# configure aws if not running from an ec2 instance with the required iam permissions attached
 sudo apt install awscli
+
+# configure aws if not running from an ec2 instance with the required iam permissions attached
 aws configure
 
 # create kops bucket and enable versioning
