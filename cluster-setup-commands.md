@@ -40,14 +40,17 @@ kops validate cluster
 kubectl config current-context
 kubectl get pods --all-namespaces
 
-# Install Ingress-nginx
-kubectl apply \
-  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml
-kubectl apply \
-  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/aws/service-l4.yaml
-kubectl apply \
-  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/aws/patch-configmap-l4.yaml
-aws iam create-service-linked-role --aws-service-name "elasticloadbalancing.amazonaws.com"
+# Install and configure helm
+wget https://get.helm.sh/helm-v2.16.9-linux-amd64.tar.gz
+tar -zxvf helm-v2.16.9-linux-amd64.tar.gz
+sudo mv linux-amd64/helm /usr/local/bin/helm
+helm init
+kubectl create serviceaccount --namespace kube-system tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+
+# Install ingress-nginx
+helm install --name ingress-nginx ingress-nginx/ingress-nginx
 
 # Install cert manager
 kubectl create namespace cert-manager
