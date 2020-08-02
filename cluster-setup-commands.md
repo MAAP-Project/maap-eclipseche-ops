@@ -35,6 +35,8 @@ kops update cluster --name $ade_host --yes
 
 # Ensure cluster is ready 
 kops validate cluster
+
+# Config kubectl and verify pods are running
 kubectl config current-context
 kubectl get pods --all-namespaces
 
