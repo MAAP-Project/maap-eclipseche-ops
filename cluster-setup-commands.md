@@ -118,6 +118,10 @@ spec:
          - '*.<REPLACE WITH ade_host value>'
 EOF
 
+# Install chectl
+bash <(curl -sL  https://www.eclipse.org/che/chectl/)
 
+# Deploy Che
+chectl server:start --platform=k8s --installer=helm --domain=${ade_host} --multiuser
 
 ```
