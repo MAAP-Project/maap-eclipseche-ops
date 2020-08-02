@@ -26,7 +26,7 @@ sudo apt install awscli
 aws configure
 
 # create kops bucket and enable versioning
-aws s3 mb s3://$ade_host
+aws s3 mb s3://${ade_host}
 aws s3api put-bucket-versioning --bucket ${ade_host} --versioning-configuration Status=Enabled
 
 kops create cluster --zones=us-east-1a --name=$ade_host
