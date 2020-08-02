@@ -50,6 +50,7 @@ kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admi
 kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
 
 # Install ingress-nginx
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/
 helm install --name ingress-nginx ingress-nginx/ingress-nginx
 
 # Install cert manager
