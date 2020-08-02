@@ -53,6 +53,20 @@ kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"templat
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/
 helm install --name ingress-nginx ingress-nginx/ingress-nginx
 
+# Add the following permissions to the master role (TODO: wrap this action in an awscli command):
+            {
+                "Effect": "Allow",
+                "Action": "iam:CreateServiceLinkedRole",
+                "Resource": "arn:aws:iam::*:role/aws-service-role/*"
+            },
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "ec2:DescribeAccountAttributes"
+                ],
+                "Resource": "*"
+            }
+
 # Install cert manager
 kubectl create namespace cert-manager
 kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
