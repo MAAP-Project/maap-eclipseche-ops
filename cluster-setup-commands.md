@@ -53,30 +53,71 @@ kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"templat
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/
 helm install --name ingress-nginx ingress-nginx/ingress-nginx
 
-# Add the following permissions to the master role (TODO: wrap this action in an awscli command):
-            {
-                "Effect": "Allow",
-                "Action": "iam:CreateServiceLinkedRole",
-                "Resource": "arn:aws:iam::*:role/aws-service-role/*"
-            },
-            {
-                "Effect": "Allow",
-                "Action": [
-                    "ec2:DescribeAccountAttributes"
-                ],
-                "Resource": "*"
-            }
+# Add the following permissions to the master role 
+wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/k8s-cluster/master_additional_permissions.json
+aws iam put-role-policy --role-name masters.${ade_host} --policy-name masters.${ade_host} --policy-document file://master_additional_permissions.json
 
 # Install cert manager
 kubectl create namespace cert-manager
 kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
 kubectl apply \
-  -f https://github.com/jetstack/cert-manager/releases/download/v0.8.1/cert-manager.yaml \
+  -f https://github.com/jetstack/cert-manager/releases/download/v0.10.1/cert-manager.yaml \
   --validate=false
 kubectl create namespace che
 aws iam create-user --user-name cert-manager
 aws iam create-access-key --user-name cert-manager
 kubectl create secret generic aws-cert-manager-access-key \
   --from-literal=CLIENT_SECRET=<REPLACE WITH SecretAccessKey content> -n cert-manager
+  
+# Add inline policy to cert-manager user
+wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/k8s-cluster/cert-mgr_additional_permissions.json
+aws iam put-user-policy --user-name cert-manager --policy-name route53 --policy-document file://cert-mgr_additional_permissions.json
+
+kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.10/deploy/manifests/00-crds.yaml
+
+cat <<EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: ClusterIssuer
+metadata:
+  name: che-certificate-issuer
+spec:
+  acme:
+    dns01:
+      providers:
+      - route53:
+          region: us-east-1
+          accessKeyID: <REPLACE WITH AccessKeyId content>
+          secretAccessKeySecretRef:
+            name: aws-cert-manager-access-key
+            key: CLIENT_SECRET
+        name: route53
+    email: brian.p.satorius@jpl.nasa.gov
+    privateKeySecretRef:
+      name: letsencrypt
+    server: https://acme-v02.api.letsencrypt.org/directory
+EOF
+
+cat <<EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+ name: che-tls
+ namespace: che
+spec:
+ secretName: che-tls
+ issuerRef:
+   name: che-certificate-issuer
+   kind: ClusterIssuer
+ dnsNames:
+   - '*.<REPLACE WITH ade_host value>'
+ acme:
+   config:
+     - dns01:
+         provider: route53
+       domains:
+         - '*.<REPLACE WITH ade_host value>'
+EOF
+
+
 
 ```
