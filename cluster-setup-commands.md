@@ -40,15 +40,6 @@ kops validate cluster
 kubectl config current-context
 kubectl get pods --all-namespaces
 
-# Install and configure helm
-# wget https://get.helm.sh/helm-v2.16.9-linux-amd64.tar.gz
-# tar -zxvf helm-v2.16.9-linux-amd64.tar.gz
-# sudo mv linux-amd64/helm /usr/local/bin/helm
-# helm init
-# kubectl create serviceaccount --namespace kube-system tiller
-# kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-# kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
-
 # Install ingress-nginx
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.26.1/deploy/static/mandatory.yaml
 kubectl apply \
@@ -60,14 +51,6 @@ kubectl apply \
 kubectl get services --namespace ingress-nginx -o jsonpath='{.items[].status.loadBalancer.ingress[0].hostname}'
 
 # In route 53, Create the wildcard DNS (for .${ade_host}) with the previous host name and ensure to add the dot (.) at the end of the host name. In the Type drop-down list, select CNAME.
-
-# deprecated
-# helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/
-# helm install --name ingress-nginx ingress-nginx/ingress-nginx
-
-# Add the following permissions to the master role 
-# wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/k8s-cluster/master_additional_permissions.json
-# aws iam put-role-policy --role-name masters.${ade_host} --policy-name masters.${ade_host} --policy-document file://master_additional_permissions.json
 
 # Install cert manager
 kubectl create namespace cert-manager
@@ -134,6 +117,6 @@ EOF
 bash <(curl -sL  https://www.eclipse.org/che/chectl/)
 
 # Deploy Che
-chectl server:start --platform=k8s --installer=helm --domain=${ade_host} --multiuser
+chectl server:start --platform=k8s --installer=operator --domain=${ade_host} --multiuser
 
 ```
