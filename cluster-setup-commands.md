@@ -50,8 +50,20 @@ kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admi
 kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
 
 # Install ingress-nginx
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/
-helm install --name ingress-nginx ingress-nginx/ingress-nginx
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.26.1/deploy/static/mandatory.yaml
+kubectl apply \
+  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/aws/service-l4.yaml
+kubectl apply \
+  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/aws/patch-configmap-l4.yaml
+
+# Find the external IP of ingress-nginx
+kubectl get services --namespace ingress-nginx -o jsonpath='{.items[].status.loadBalancer.ingress[0].hostname}'
+
+# In route 53, Create the wildcard DNS (for .${ade_host}) with the previous host name and ensure to add the dot (.) at the end of the host name. In the Type drop-down list, select CNAME.
+
+# deprecated
+# helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/
+# helm install --name ingress-nginx ingress-nginx/ingress-nginx
 
 # Add the following permissions to the master role 
 wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/k8s-cluster/master_additional_permissions.json
