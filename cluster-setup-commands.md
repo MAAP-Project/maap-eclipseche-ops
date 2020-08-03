@@ -66,8 +66,8 @@ kubectl get services --namespace ingress-nginx -o jsonpath='{.items[].status.loa
 # helm install --name ingress-nginx ingress-nginx/ingress-nginx
 
 # Add the following permissions to the master role 
-wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/k8s-cluster/master_additional_permissions.json
-aws iam put-role-policy --role-name masters.${ade_host} --policy-name masters.${ade_host} --policy-document file://master_additional_permissions.json
+# wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/k8s-cluster/master_additional_permissions.json
+# aws iam put-role-policy --role-name masters.${ade_host} --policy-name masters.${ade_host} --policy-document file://master_additional_permissions.json
 
 # Install cert manager
 kubectl create namespace cert-manager
