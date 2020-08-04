@@ -1,4 +1,8 @@
-## Command sequence for installing and configuring an Eclipse Che cluster
+## Instructions for installing and configuring the MAAP Eclipse Che cluster
+
+This script has been tested using Ubuntu 10.04
+
+### Step 1: Install required libraries
 
 ```bash
 # The host name for the ADE server.
@@ -21,7 +25,11 @@ sudo mv ./kubectl /usr/local/bin/kubectl
 kubectl version --client
 
 sudo apt install awscli
+```
 
+### Step 2: Configure K8s cluster
+
+```bash
 # configure aws if not running from an ec2 instance with the required iam permissions attached
 aws configure
 
@@ -39,7 +47,11 @@ kops validate cluster
 # Config kubectl and verify pods are running
 kubectl config current-context
 kubectl get pods --all-namespaces
+```
 
+### Step 3: Configure K8s cluster
+
+```bash
 # Install ingress-nginx
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.26.1/deploy/static/mandatory.yaml
 kubectl apply \
@@ -49,9 +61,16 @@ kubectl apply \
 
 # Find the external IP of ingress-nginx
 kubectl get services --namespace ingress-nginx -o jsonpath='{.items[].status.loadBalancer.ingress[0].hostname}'
+```
 
-# In route 53, Create the wildcard DNS (for .${ade_host}) with the previous host name and ensure to add the dot (.) at the end of the host name. In the Type drop-down list, select CNAME.
+### Step 4: ADD CNAME record
 
+In route 53, Create the wildcard DNS (for .${ade_host}) with the previous host name and ensure to add the dot (.) at the end of the host name. 
+Within the ADE hosted zone, create a new "CNAME" type recordset, and use * for the name. Within the Alias value field, enter the external IP value generated in the last command of step 3.
+
+### Step 5: Install cert-manager 
+
+```bash
 # Install cert manager
 kubectl create namespace cert-manager
 kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
@@ -68,7 +87,6 @@ kubectl create secret generic aws-cert-manager-access-key \
 wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/k8s-cluster/cert-mgr_additional_permissions.json
 aws iam put-user-policy --user-name cert-manager --policy-name route53 --policy-document file://cert-mgr_additional_permissions.json
 
-kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.10/deploy/manifests/00-crds.yaml
 
 cat <<EOF | kubectl apply -f -
 apiVersion: certmanager.k8s.io/v1alpha1
@@ -86,7 +104,7 @@ spec:
             name: aws-cert-manager-access-key
             key: CLIENT_SECRET
         name: route53
-    email: brian.p.satorius@jpl.nasa.gov
+    email: <REPLACE WITH ADMIN'S EMAIL>
     privateKeySecretRef:
       name: letsencrypt
     server: https://acme-v02.api.letsencrypt.org/directory
@@ -112,11 +130,6 @@ spec:
        domains:
          - '*.<REPLACE WITH ade_host value>'
 EOF
-
-# Install chectl
-bash <(curl -sL  https://www.eclipse.org/che/chectl/)
-
-# Deploy Che
-chectl server:start --platform=k8s --installer=operator --domain=${ade_host} --multiuser
-
 ```
+
+### Step 5: Install Che
