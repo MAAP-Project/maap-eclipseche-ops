@@ -55,7 +55,7 @@ kubectl config current-context
 kubectl get pods --all-namespaces
 ```
 
-### Step 3: Ingress-nginx
+### Step 3: Install Ingress-nginx
 
 ```bash
 # Install ingress-nginx
