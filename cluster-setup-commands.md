@@ -1,12 +1,12 @@
 ## Instructions for installing and configuring the MAAP Eclipse Che cluster
 
-This script has been tested using Ubuntu 18.04
+This script has been tested using Ubuntu 18.04. Required fields are denoted within brackets *<>*
 
 ### Step 1: Install required libraries
 
 ```bash
 # The host name for the ADE server.
-ade_host='?'
+ade_host='<REPLACE with ADE host name>'
 export KOPS_CLUSTER_NAME=$ade_host
 export KOPS_STATE_STORE=s3://${ade_host}
 
@@ -43,7 +43,7 @@ aws configure
 aws s3 mb s3://${ade_host}
 aws s3api put-bucket-versioning --bucket ${ade_host} --versioning-configuration Status=Enabled
 
-kops create cluster --zones=us-east-1a --name=$ade_host
+kops create cluster --zones=<REPLACE with target AWS region> --name=$ade_host
 kops create secret --name $ade_host sshpublickey admin -i ~/.ssh/authorized_keys 
 kops update cluster --name $ade_host --yes
 
