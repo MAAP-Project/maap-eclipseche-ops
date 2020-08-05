@@ -74,7 +74,41 @@ kubectl get services --namespace ingress-nginx -o jsonpath='{.items[].status.loa
 In route 53, Create the wildcard DNS (for .${ade_host}) with the previous host name and ensure to add the dot (.) at the end of the host name. 
 Within the ADE hosted zone, create a new "CNAME" type recordset, and use * for the name. Within the Alias value field, enter the external IP value generated in the last command of step 3.
 
-### Step 5: Install cert-manager 
+### Step 5: Enable the TLS and DNS challenge
+
+```bash
+# Use the following command to obtain the zone ID:
+aws route53 list-hosted-zones
+```
+Copy the last segment of the Id from the output of the last command  content and replace INSERT_ZONE_ID with the route53 zone ID:
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "route53:GetChange",
+                "route53:ListHostedZonesByName"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "route53:ChangeResourceRecordSets"
+            ],
+            "Resource": [
+                "arn:aws:route53:::hostedzone/<INSERT_ZONE_ID>"
+            ]
+        }
+    ]
+}
+
+Now update the IAM role attached to the master node EC2 instance (masters.[ade_host], in this case). Add an *inline policy* using the above json with the name `eclipse-che-route53`.
+
+### Step 6: Install cert-manager 
 
 ```bash
 # Install cert manager
@@ -138,7 +172,7 @@ spec:
 EOF
 ```
 
-### Step 6: Install Che
+### Step 7: Install Che
 
 ```bash
 git clone https://mas.maap-project.org/root/che.git
