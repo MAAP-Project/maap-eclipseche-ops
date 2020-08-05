@@ -138,7 +138,7 @@ spec:
 EOF
 ```
 
-### Step 5: Install Che
+### Step 6: Install Che
 
 ```bash
 git clone https://mas.maap-project.org/root/che.git
