@@ -43,7 +43,7 @@ aws configure
 aws s3 mb s3://${ade_host}
 aws s3api put-bucket-versioning --bucket ${ade_host} --versioning-configuration Status=Enabled
 
-kops create cluster --zones=<REPLACE with target AWS region> --name=$ade_host
+kops create cluster --zones=<REPLACE with target AWS region e.g. us-east-1a> --name=$ade_host
 kops create secret --name $ade_host sshpublickey admin -i ~/.ssh/authorized_keys 
 kops update cluster --name $ade_host --yes
 
