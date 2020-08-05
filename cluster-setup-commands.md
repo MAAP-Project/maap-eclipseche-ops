@@ -177,9 +177,28 @@ EOF
 ### Step 7: Install Che
 
 ```bash
-git clone https://mas.maap-project.org/root/che.git
-cd che/deploy/kubernetes/helm/che
-git checkout cluster-deploy
-helm dep update
-sudo helm upgrade --install che --namespace che --set global.multiuser=true --set global.serverStrategy=multi-host --set global.ingressDomain=${ade_host} --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls
+git clone https://github.com/che-incubator/chectl.git
+
+# Install yarn
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt update
+sudo apt install yarn
+
+# Update node
+sudo apt install npm
+npm cache clean -f
+sudo npm install -g n
+sudo n stable
+
+# Install docker
+sudo apt install docker.io
+sudo docker login mas.maap-project.org
+<ENTER mas.maap-project.org credentials>
+
+cd chectl
+git checkout 7.0.x
+yarn
+cd bin
+./run server:start --platform=k8s --installer=operator --domain=${ade_host} --multiuser --tls
 ```
