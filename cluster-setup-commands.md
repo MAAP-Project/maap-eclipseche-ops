@@ -24,6 +24,12 @@ chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 kubectl version --client
 
+# Install helm
+wget https://get.helm.sh/helm-v2.16.9-linux-amd64.tar.gz
+tar -zxvf helm-v2.16.9-linux-amd64.tar.gz
+sudo mv linux-amd64/helm /usr/local/bin/helm
+
+# Install awscli
 sudo apt install awscli
 ```
 
@@ -133,3 +139,11 @@ EOF
 ```
 
 ### Step 5: Install Che
+
+```bash
+git clone https://mas.maap-project.org/root/che.git
+cd che/deploy/kubernetes/helm/che
+git checkout cluster-deploy
+helm dep update
+sudo helm upgrade --install che --namespace che --set global.multiuser=true --set global.serverStrategy=multi-host --set global.ingressDomain=${ade_host} --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls
+```
