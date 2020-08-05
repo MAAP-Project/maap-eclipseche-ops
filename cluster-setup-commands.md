@@ -24,11 +24,6 @@ chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 kubectl version --client
 
-# Install helm
-wget https://get.helm.sh/helm-v2.16.9-linux-amd64.tar.gz
-tar -zxvf helm-v2.16.9-linux-amd64.tar.gz
-sudo mv linux-amd64/helm /usr/local/bin/helm
-
 # Install awscli
 sudo apt install awscli
 ```
