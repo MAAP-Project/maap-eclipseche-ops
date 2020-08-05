@@ -1,6 +1,6 @@
 ## Instructions for installing and configuring the MAAP Eclipse Che cluster
 
-This script has been tested using Ubuntu 10.04
+This script has been tested using Ubuntu 18.04
 
 ### Step 1: Install required libraries
 
