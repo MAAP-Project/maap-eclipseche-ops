@@ -81,6 +81,7 @@ Within the ADE hosted zone, create a new "CNAME" type recordset, and use * for t
 aws route53 list-hosted-zones
 ```
 Copy the last segment of the Id from the output of the last command  content and replace INSERT_ZONE_ID with the route53 zone ID:
+```json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -105,6 +106,7 @@ Copy the last segment of the Id from the output of the last command  content and
         }
     ]
 }
+```
 
 Now update the IAM role attached to the master node EC2 instance (masters.[ade_host], in this case). Add an *inline policy* using the above json with the name `eclipse-che-route53`.
 
