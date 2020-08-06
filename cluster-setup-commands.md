@@ -197,3 +197,6 @@ yarn
 cd bin
 ./run server:start --platform=k8s --installer=operator --domain=${ade_host} --multiuser --tls
 ```
+
+### Debugging
+`./chectl-master/bin/run server:start --k8spodreadytimeout=180000 --installer=operator --listr-renderer=verbose --platform=k8s --che-operator-cr-yaml=maap-k8sconfig.yaml`
