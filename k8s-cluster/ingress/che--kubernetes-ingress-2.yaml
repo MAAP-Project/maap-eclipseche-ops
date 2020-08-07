@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: che-kubernetes-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: cert-issuer
+spec:
+  tls:
+  - hosts:
+    - testi.briancluster.xyz
+    secretName: che-tls
+  rules:
+  - host: testi.briancluster.xyz
+    http:
+      paths:
+      - backend:
+          serviceName: che-kubernetes
+          servicePort: 80
