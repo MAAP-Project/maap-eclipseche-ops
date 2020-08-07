@@ -169,6 +169,26 @@ spec:
 EOF
 ```
 
+Wait until the status of the cert-manager is `True`. Run `kubectl describe certificate/che-tls -n che` to verify this.
+
+```bash
+# sample output:
+Status:
+  Conditions:
+    Last Transition Time:  2019-07-30T14:48:07Z
+    Message:               Certificate is up to date and has not expired
+    Reason:                Ready
+    Status:                True
+    Type:                  Ready
+  Not After:               2019-10-28T13:48:05Z
+Events:
+  Type    Reason         Age    From          Message
+  ----    ------         ----   ----          -------
+  Normal  OrderCreated   5m29s  cert-manager  Created Order resource "che-tls-3365293372"
+  Normal  OrderComplete  3m46s  cert-manager  Order "che-tls-3365293372" completed successfully
+  Normal  CertIssued     3m45s  cert-manager  Certificate issued successfully
+ ```
+
 ### Step 7: Install Che
 
 ```bash
