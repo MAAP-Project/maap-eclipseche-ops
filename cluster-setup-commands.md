@@ -25,7 +25,6 @@ sudo mv kops-linux-amd64 /usr/local/bin/kops
 curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
-kubectl version --client
 
 # Install helm
 wget https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz
