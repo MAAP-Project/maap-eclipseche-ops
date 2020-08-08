@@ -38,9 +38,6 @@ sudo apt install awscli
 ### Step 2: Configure K8s cluster
 
 ```bash
-# configure aws if not running from an ec2 instance with the required iam permissions attached
-aws configure
-
 # create kops bucket and enable versioning
 aws s3 mb s3://${ade_host}
 aws s3api put-bucket-versioning --bucket ${ade_host} --versioning-configuration Status=Enabled
