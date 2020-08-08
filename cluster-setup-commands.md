@@ -208,6 +208,9 @@ kubectl apply -f ./tiller-rbac.yaml
 #kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
 sudo helm init --service-account tiller --wait
 
+sudo helm repo update
+sudo helm dependency update
+
 sudo helm upgrade --install che --namespace default --set global.multiuser=true --set global.serverStrategy=single-host --set global.ingressDomain=$ade_host --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls ./
 
 #DONE
