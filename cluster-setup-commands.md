@@ -68,10 +68,9 @@ kubectl apply \
 kubectl get services --namespace ingress-nginx -o jsonpath='{.items[].status.loadBalancer.ingress[0].hostname}'
 ```
 
-### Step 4: ADD CNAME record
+### Step 4: Update DNS record
 
-In route 53, Create the wildcard DNS (for .${ade_host}) with the previous host name and ensure to add the dot (.) at the end of the host name. 
-Within the ADE hosted zone, create a new "CNAME" type recordset, and use * for the name. Within the Alias value field, enter the external IP value generated in the last command of step 3.
+In route 53, update the hosted zone with the external IP address emmitted above. As an example, you could create a new "CNAME" type recordset, and enter the external IP address as the alias value.
 
 ### Step 5: Enable the TLS and DNS challenge
 
