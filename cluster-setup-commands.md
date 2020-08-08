@@ -14,12 +14,12 @@ sudo apt-get update
 sudo apt-get -y dist-upgrade
 
 # Install kops
-curl -LO https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+curl -LO https://github.com/kubernetes/kops/releases/download/1.13.0/kops-linux-amd64
 chmod +x kops-linux-amd64
 sudo mv kops-linux-amd64 /usr/local/bin/kops
 
 # Install kubectl
-curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 kubectl version --client
@@ -159,13 +159,13 @@ spec:
    name: che-certificate-issuer
    kind: ClusterIssuer
  dnsNames:
-   - '*.<REPLACE WITH ade_host value>'
+   - '<REPLACE WITH ade_host value>'
  acme:
    config:
      - dns01:
          provider: route53
        domains:
-         - '*.<REPLACE WITH ade_host value>'
+         - '<REPLACE WITH ade_host value>'
 EOF
 ```
 
@@ -192,6 +192,21 @@ Events:
 ### Step 7: Install Che
 
 ```bash
+git clone https://mas.maap-project.org/root/che
+cd che/deploy/kubernetes/helm/che
+
+kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
+kubectl create serviceaccount tiller --namespace kube-system
+kubectl apply -f ./tiller-rbac.yaml
+#if necessary
+#kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+sudo helm init --service-account tiller --wait
+
+sudo helm upgrade --install che --namespace default --set global.multiuser=true --set global.serverStrategy=single-host --set global.ingressDomain=$ade_host --set global.tls.enabled=true --set global.tls.useCertManager=true --set global.tls.useStaging=false --set tls.secretName=che-tls ./
+
+#DONE
+
+
 git clone https://github.com/che-incubator/chectl.git
 
 # Install yarn
