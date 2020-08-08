@@ -1,10 +1,9 @@
 ## Instructions for installing and configuring the MAAP Eclipse Che cluster
 
-### Prerequisites
+### Requirements
 - This script has been tested using Ubuntu 18.04
 - Full AWS account access required for the machine on which this script is run,
-
-Fill in the required fields denoted with brackets *<>*
+- Fill in the required fields denoted with brackets *<>*
 
 ### Step 1: Install required libraries
 
