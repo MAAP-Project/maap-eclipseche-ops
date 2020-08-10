@@ -1,4 +1,4 @@
 spec:
   k8s:
     ingressStrategy: 'single-host'
-    securityContextRunAsUser: ''
+    securityContextRunAsUser: '0'
