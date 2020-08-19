@@ -20,6 +20,11 @@ sudo microk8s.enable storage; sleep 1;
 sudo microk8s.enable dns; sleep 1;
 sudo microk8s.enable registry
 #Add the host server to the list of nameservers 
+#data:
+#  upstreamNameservers: |
+#    ["Your nameserver address"]
+# To find the nameserver address on ubuntu, retrieve this value from /run/systemd/resolve/resolv.conf
+# and enter it in the noted array.
 microk8s.kubectl -n kube-system edit configmap/kube-dns
 
 sudo iptables -P INPUT ACCEPT
