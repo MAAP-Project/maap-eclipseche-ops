@@ -9,7 +9,7 @@ This guide assumes that the core MAAP systems are configured and operational:
 
 ### 1) Install Eclipse Che and its dependencies
 
-Follow the [Setup Commands document](setup-commands.md) script to install Eclipse Che and configure the host server. NOTE: prior to starting this step, a DNS name for the host server must be configured in order for Che to set up its required SSL certificates.
+Follow the [Setup Commands document](setup-commands-v6.md) script to install Eclipse Che and configure the host server. NOTE: prior to starting this step, a DNS name for the host server must be configured in order for Che to set up its required SSL certificates.
 
 ### 2) Restart Keycloak and Che pods if necessary
 
