@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: default-ingress
+spec:
+  tls:
+  - hosts:
+    - ade.che7test.xyz
+    secretName: default-tls-secret
+  rules:
+  - host: ade.che7test.xyz
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx-deployment
+          servicePort: 80
