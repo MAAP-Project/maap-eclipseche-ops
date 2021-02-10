@@ -9,3 +9,14 @@ spec:
       CHE_LIMITS_USER_WORKSPACES_RUN_COUNT: '-1'
       CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_FS__GROUP: '0'
       CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_RUN__AS__USER: '0'
+  database:
+    # when set to true, the operator skips deploying Postgres, and passes connection details of existing DB to Che server
+    # otherwise a Postgres deployment is created
+    externalDb: false
+    # Postgres deployment in format image:tag. 
+    postgresImage: 'mas.maap-project.org:5000/root/che7/che-postgres:7.23.1-maap'
+  auth:
+    # instructs operator on whether or not to deploy Keycloak/RH SSO instance. When set to true provision connection details
+    externalIdentityProvider: false
+    # image:tag used in Keycloak deployment
+    identityProviderImage: 'mas.maap-project.org:5000/root/che7/che-keycloak:7.23.1-maap'
