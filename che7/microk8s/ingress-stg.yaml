@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: default-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+
+    # Add the following line (staging first for testing, then apply the prod issuer)
+    cert-manager.io/cluster-issuer: "letsencrypt-staging" 
+spec:
+  tls:
+  - hosts:
+    - ade.che7test.xyz
+    secretName: default-tls-secret
+  rules:
+  - host: ade.che7test.xyz
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx-deployment
+          servicePort: 80
