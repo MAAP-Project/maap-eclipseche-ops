@@ -35,23 +35,31 @@ kubectl create namespace cert-manager
 # Apply the official yaml file 
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.14.2/cert-manager.yaml
 
-bash <(curl -sL  https://www.eclipse.org/che/chectl/)
-
-wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/maap-k8sconfig-patch.yaml
-wget https://github.com/MAAP-Project/maap-eclipseche-ops/blob/master/che7/microk8s/prod.yaml 
-wget https://github.com/MAAP-Project/maap-eclipseche-ops/blob/master/che7/microk8s/ingress-prd.yaml 
-# (updated domain in ingress-prd.yaml)
-
 ##### If deploying to GCC:
 # note this temporary workaround for cert acquistion issues: https://github.com/jetstack/cert-manager/issues/2442#issuecomment-564955495
 # update the name server by running microk8s.kubectl -n kube-system edit configmap/coredns
 # the nameserver can be found by running cat /run/systemd/resolve/resolv.conf
 #####
 
+# Install chectl
+bash <(curl -sL  https://www.eclipse.org/che/chectl/)
+
+wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/maap-k8sconfig-patch.yaml
+wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/microk8s/prod.yaml 
+wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/microk8s/ingress-prd.yaml 
+# (updated domain in ingress-prd.yaml)
+
+kubectl apply -f prod.yaml 
+kubectl apply -f ingress-prd.yaml 
+
+# Ensure the following returns a value of 'True' before proceeding
+kubectl get cert
+
+# Deploy Che
 chectl server:deploy --installer=operator --platform=microk8s --che-operator-cr-patch-yaml=maap-k8sconfig-patch.yaml --domain={REPLACE_ME} --multiuser --chenamespace=default
 
 edit daemonset nginx-ingress-microk8s-controller -n ingress   
-# Add the following setting to ensure signed requests
+# Add the following setting to ensure http requests are signed
 #  - --default-ssl-certificate=default/default-tls-secret
 
 # DONE!
