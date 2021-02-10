@@ -1,3 +1,4 @@
+```shell
 sudo apt-get update
 sudo apt-get -y dist-upgrade
 sudo snap install microk8s --classic --channel=1.19/stable
@@ -58,3 +59,4 @@ edit daemonset nginx-ingress-microk8s-controller -n ingress
 # To completely reset the system (you probably don't need this):
 sudo microk8s.reset
 sudo snap remove microk8s --purge
+```
