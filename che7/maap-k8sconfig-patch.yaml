@@ -1,0 +1,11 @@
+spec:
+  k8s:
+    ingressStrategy: 'single-host'
+  server:
+    cheImage: 'mas.maap-project.org:5000/root/che7/che-server'
+    cheImageTag: '7.23.1-maap'
+    devfileRegistryImage: 'mas.maap-project.org:5000/root/che-devfile-registry:7.23.1-maap'
+    customCheProperties:
+      CHE_LIMITS_USER_WORKSPACES_RUN_COUNT: '-1'
+      CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_FS__GROUP: '0'
+      CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_RUN__AS__USER: '0'
