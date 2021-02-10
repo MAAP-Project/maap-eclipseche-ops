@@ -58,7 +58,7 @@ kubectl get cert
 # Deploy Che
 chectl server:deploy --installer=operator --platform=microk8s --che-operator-cr-patch-yaml=maap-k8sconfig-patch.yaml --domain={REPLACE_ME} --multiuser --chenamespace=default
 
-edit daemonset nginx-ingress-microk8s-controller -n ingress   
+kubectl edit daemonset nginx-ingress-microk8s-controller -n ingress   
 # Add the following setting to ensure http requests are signed
 #  - --default-ssl-certificate=default/default-tls-secret
 
