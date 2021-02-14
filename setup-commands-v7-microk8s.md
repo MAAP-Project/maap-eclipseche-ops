@@ -62,6 +62,10 @@ kubectl edit daemonset nginx-ingress-microk8s-controller -n ingress
 # Add the following setting to ensure http requests are signed
 #  - --default-ssl-certificate=default/default-tls-secret
 
+kubectl edit ingress
+# Add the following annotation to ensure that *all* http requests are forwarded to https
+# nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
 # DONE!
 
 # To completely reset the system (you probably don't need this):
