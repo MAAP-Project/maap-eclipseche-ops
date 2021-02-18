@@ -10,6 +10,10 @@ spec:
       CHE_LIMITS_USER_WORKSPACES_RUN_COUNT: '-1'
       CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_FS__GROUP: '0'
       CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_RUN__AS__USER: '0'
+      CHE_INFRA_KUBERNETES_SERVER__STRATEGY: 'single-host'
+      CHE_INFRA_KUBERNETES_SINGLEHOST_WORKSPACE_DEVFILE__ENDPOINT__EXPOSURE: 'single-host'
+      CHE_LIMITS_WORKSPACE_IDLE_TIMEOUT: '604800000' # in milliseconds, 7 days hour before auto stopping workspace
+      CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT: '<username>-<workspaceid>'
   database:
     # when set to true, the operator skips deploying Postgres, and passes connection details of existing DB to Che server
     # otherwise a Postgres deployment is created
