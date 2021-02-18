@@ -46,12 +46,6 @@ kubectl create namespace cert-manager
 # Apply the official yaml file 
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.14.2/cert-manager.yaml
 
-##### If deploying to GCC:
-# note this temporary workaround for cert acquistion issues: https://github.com/jetstack/cert-manager/issues/2442#issuecomment-564955495
-# update the name server by running microk8s.kubectl -n kube-system edit configmap/coredns
-# the nameserver can be found by running cat /run/systemd/resolve/resolv.conf
-#####
-
 # Install chectl
 bash <(curl -sL  https://www.eclipse.org/che/chectl/)
 
@@ -70,11 +64,9 @@ kubectl get cert
 chectl server:deploy --installer=operator --platform=microk8s --che-operator-cr-patch-yaml=maap-k8sconfig-patch.yaml --domain={REPLACE_ME} --multiuser --chenamespace=default
 
 kubectl edit daemonset nginx-ingress-microk8s-controller -n ingress   
-# Add the following setting to ensure http requests are signed
+# If needed by IT security, add the following setting to ensure http requests are signed in spec/template/spec/containers/args
 #  - --default-ssl-certificate=default/default-tls-secret
-
-kubectl edit ingress
-# Add the following annotation to ensure that *all* http requests are forwarded to https
+# If needed by IT security, add the following annotation to ensure that *all* http requests are forwarded to https
 # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
 # DONE!
