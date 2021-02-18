@@ -5,6 +5,16 @@ sudo snap install microk8s --classic --channel=1.19/stable
 # Snap update required for the libseccomp library
 sudo snap refresh 
 
+# For GCC, need to install cilium. Currently there's a bug https://github.com/ubuntu/microk8s/issues/1603
+# so you'll need to enable it, ctrl-c it when it appears to hang with "0 of 1 updated pods..." (2-3 of these messages)
+# Then disable it. Wait a bit, and re-enable it. Make sure that when you re-enable it that it re-downloads
+# cilium. If it says it's already enabled, you didn't wait long enough.
+sudo microk8s.enable cilium;
+sudo microk8s.disable cilium;
+# Wait until the command "sudo microk8s.kubectl get pods --all-namespaces" returns only healthy, running pods.
+sudo microk8s.enable cilium;
+# End GCC
+
 sudo microk8s.enable ingress; sleep 1;
 sudo microk8s.enable storage; sleep 1;
 sudo microk8s.enable dns; sleep 1;
@@ -17,17 +27,18 @@ sudo iptables -F
 sudo apt-get install iptables-persistent
 
 # Install kubectl, required for chectl
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+sudo snap install kubectl --classic 
 sudo usermod -a -G microk8s ubuntu
 sudo chown -f -R ubuntu ~/.kube
 [log back in]
 
 microk8s.config | cat - > $HOME/.kube/config
 
-mkdir -p ~/.local/bin/kubectl
-mv ./kubectl ~/.local/bin/kubectl
-PATH=$PATH:~/.local/bin/kubectl
+##### If deploying to GCC:
+# note this temporary workaround for cert acquistion issues: https://github.com/jetstack/cert-manager/issues/2442#issuecomment-564955495
+# update the name server by running microk8s.kubectl -n kube-system edit configmap/coredns
+# the nameserver can be found by running cat /run/systemd/resolve/resolv.conf
+#####
 
 # Create a new namespace for the cert-manager
 kubectl create namespace cert-manager
