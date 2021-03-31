@@ -89,6 +89,7 @@ microk8s.kubectl apply --validate=false -f https://github.com/jetstack/cert-mana
 bash <(curl -sL  https://www.eclipse.org/che/chectl/)
 
 wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/maap-k8sconfig-patch.yaml
+wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/nfs-client-che-sc.yaml
 wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/microk8s/prod.yaml 
 wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/microk8s/ingress-prd.yaml 
 # (updated domain in ingress-prd.yaml)
