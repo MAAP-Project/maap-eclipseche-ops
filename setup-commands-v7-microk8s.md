@@ -35,13 +35,13 @@ sudo mount -a
 ## MicroK8S Snap Installation
 ```shell
 sudo snap install microk8s --classic --channel=1.20/stable
-sudo snap install kubectl --classic --channel=1.20/stable  # Install kubectl, required for chectl
+sudo snap alias microk8s.kubectl kubectl # Alias kubectl, required for chectl
 # Snap update required for the libseccomp library
 sudo snap refresh 
 
-sudo mkdir ~/.kube
-sudo usermod -a -G microk8s ubuntu
-sudo chown -f -R ubuntu ~/.kube
+sudo mkdir -p ~/.kube
+sudo usermod -a -G microk8s $USER
+sudo chown -f -R $USER ~/.kube
 sudo microk8s.config | cat - > $HOME/.kube/config
 # Log out and back in
 
@@ -50,7 +50,10 @@ sudo microk8s.enable helm3
 sudo microk8s.enable cilium # may need to wait several minutes, be patient
 sudo ip link delete vxlan.calico
 # Following allows clustering to work, i.e. microk8s add-node/join, with cilium.
-sudo cp /var/snap/microk8s/2074/actions/cilium.yaml /var/snap/microk8s/2074/args/cni-network/cni.yaml
+sudo cp -np /var/snap/microk8s/current/args/cni-network/cni.yaml.disabled /var/snap/microk8s/current/args/cni-network/cni.yaml.calico
+sudo cp -p /var/snap/microk8s/current/actions/cilium.yaml /var/snap/microk8s/current/args/cni-network/cni.yaml
+
+# Update /etc/hosts to add the ade hostname as localhost so that it doesn't hairpin
 
 # STOP HERE if this node is going to be a worker node.
 
@@ -120,21 +123,24 @@ kubectl edit daemonset nginx-ingress-microk8s-controller -n ingress
 ```
 
 # Resetting MicroK8S
-```
+```shell
 # Remove node from cluster if it's in a clustered configuration
 sudo microk8s leave
 sudo microk8s remove-node...
 
 sudo microk8s.reset
 sudo snap remove microk8s --purge
-sudo snap remove kubectl --purge
 sudo rm -rf ~/.kube
 sudo rm -rf /var/snap/microk8s
-sudo rm -rf /var/snap/kubectl
 sudo rm -rf ~/snap/microk8s
-sudo rm -rf ~/snap/kubectl
 sudo rm -rf /root/snap/microk8s
-sudo rm -rf /root/snap/kubectl
-# sudo ip addr
+sudo ip addr
+# Accept all traffic first to avoid ssh lockdown  via iptables firewall rules #
+sudo iptables -P INPUT ACCEPT
+sudo iptables -P FORWARD ACCEPT
+sudo iptables -P OUTPUT ACCEPT
+sudo iptables -F
+sudo iptables -X
+sudo iptables -Z 
 # sudo ip link delete <device> any orphaned network, i.e. things that have `cilium` or `calico` in them
 ```
