@@ -66,8 +66,8 @@ sudo microk8s.helm3 install nfs-subdir-external-provisioner nfs-subdir-external-
     --set nfs.path=/
 
 # Set NFS provisioner as default
-kubectl patch storageclass microk8s-hostpath -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
-kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+microk8s.kubectl patch storageclass microk8s-hostpath -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+microk8s.kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
 sudo microk8s.enable ingress; sleep 5;
 sudo microk8s.enable dns:10.49.0.2; sleep 5; # needed for GCC as it blocks dns queries other than the local resolver
@@ -113,10 +113,15 @@ microk8s.status
 # Deploy Che
 chectl server:deploy --installer=operator --platform=microk8s --che-operator-cr-patch-yaml=maap-k8sconfig-patch.yaml --multiuser --domain={REPLACE_ME} 
 
-kubectl edit daemonset nginx-ingress-microk8s-controller -n ingress   
-# If needed by IT security, add the following setting to ensure http requests are signed in spec/template/spec/containers/args
+
+# If needed by IT security, do the following
+
+# Ensure http requests are signed in spec/template/spec/containers/args
+microk8s.kubectl  edit daemonset nginx-ingress-microk8s-controller -n ingress
 #  - --default-ssl-certificate=default/default-tls-secret
-# If needed by IT security, add the following annotation to ensure that *all* http requests are forwarded to https
+
+# Add the following annotation to ensure that *all* http requests are forwarded to https
+microk8s.kubectl  edit ingress
 # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
 # DONE!
