@@ -10,10 +10,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - ade.che7test.xyz
+    - ade.ops.maap-project.org
     secretName: default-tls-secret
   rules:
-  - host: ade.che7test.xyz
+  - host: ade.ops.maap-project.org
   - http:
       paths:
       - path: /
