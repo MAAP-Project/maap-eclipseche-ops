@@ -49,11 +49,5 @@ To validate the install, navigate to the Che login page, sign in using MAAP, and
 
 ### 7) Configure ESDC iframe proxy
 
-The ESDC application is used within MAAP workspaces and must be setup using a reverse proxy to a running MAAP ESDC site.
-
-- Install Apache: `sudo apt install apache2`
-- Create a daily cron job that executes the [updatelink.sh](nginxssl/updatelink.sh) script
-- Create a new Apache site listening on port `3052` using the [example config](apache/edsc_proxy.conf) as a guide
-- Ensure the following Apache modules are installed: ssl, rewrite, proxy_http, headers, substitute
-
+See [EDSC Proxy Setup Commands document](edsc-proxy-setup-commands.md).
 
