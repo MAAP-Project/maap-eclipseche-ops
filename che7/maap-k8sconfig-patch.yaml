@@ -1,11 +1,12 @@
+# IMPORTANT: Replace mas.<env>.maap-project.org to match the target environment
 spec:
   k8s:
     ingressStrategy: 'single-host'
   server:
-    cheImage: 'mas.maap-project.org:5000/root/che7/che-server'
-    cheImageTag: '7.25.2-maap-efs'
+    cheImage: 'mas.<env>.maap-project.org:5000/root/che7/che-server'
+    cheImageTag: '7.25.2-maap'
     cheImagePullPolicy: Always
-    devfileRegistryImage: 'mas.maap-project.org:5000/root/che-devfile-registry:7.25.2-maap'
+    devfileRegistryImage: 'mas.<env>.maap-project.org:5000/root/che-devfile-registry:7.25.2-maap'
     customCheProperties:
       CHE_LIMITS_USER_WORKSPACES_RUN_COUNT: '-1'
       CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_FS__GROUP: '0'
@@ -19,10 +20,10 @@ spec:
     # otherwise a Postgres deployment is created
     externalDb: false
     # Postgres deployment in format image:tag. 
-    postgresImage: 'mas.maap-project.org:5000/root/che7/che-postgres:7.25.2-maap-efs'
+    postgresImage: 'mas.<env>.maap-project.org:5000/root/che7/che-postgres:7.25.2-maap'
   auth:
     # instructs operator on whether or not to deploy Keycloak/RH SSO instance. When set to true provision connection details
     externalIdentityProvider: false
     # image:tag used in Keycloak deployment
-    identityProviderImage: 'mas.maap-project.org:5000/root/che7/che-keycloak:7.25.2-maap-efs'
+    identityProviderImage: 'mas.<env>.maap-project.org:5000/root/che7/che-keycloak:7.25.2-maap'
 
