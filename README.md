@@ -9,7 +9,7 @@ Before running a MAAP Eclipse Che environment, the following core MAAP services 
 - [CAS service integrated with URS](https://github.com/MAAP-Project/maap-auth-cas)
 - [CMR](https://github.com/MAAP-Project/maap-cmr)
 - [CORE API](https://github.com/MAAP-Project/maap-api-nasa)
-- [DPS](https://github.com/MAAP-Project/maap-mas-gitlab)
+- [DPS](https://github.com/MAAP-Project/maap-dps-packer-templates)
 - [MAS](https://github.com/MAAP-Project/maap-mas-gitlab)
 
 **Host environment**: these instructions have been tested on EC2 VMs running Ubuntu version >= 18.04. 
