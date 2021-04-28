@@ -27,7 +27,10 @@ sudo service cachefilesd start
 sudo mkdir /efs
 # get mount target
 echo "$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone).fs-<EFSID>.efs.us-west-2.amazonaws.com"
-# add `<mount-target-DNS>:/ /efs nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport,_netdev,fsc 0 0` to /etc/fstab
+# add the following line to the /etc/fstab file: 
+
+    <mount-target-DNS>:/ /efs nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport,_netdev,fsc 0 0`
+
 # [Additional mounting considerations - Amazon Elastic File System](https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-mount-cmd-general.html)
 sudo mount -a
 ```
@@ -66,8 +69,8 @@ sudo microk8s.helm3 install nfs-subdir-external-provisioner nfs-subdir-external-
     --set nfs.path=/
 
 # Set NFS provisioner as default
-microk8s.kubectl patch storageclass microk8s-hostpath -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
-microk8s.kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+kubectl patch storageclass microk8s-hostpath -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
 sudo microk8s.enable ingress; sleep 5;
 sudo microk8s.enable dns:10.49.0.2; sleep 5; # needed for GCC as it blocks dns queries other than the local resolver
@@ -75,18 +78,21 @@ sudo microk8s.enable dns:10.49.0.2; sleep 5; # needed for GCC as it blocks dns q
 sudo microk8s.enable registry
 
 # Edit ingress daemonset to set ingress class back to nginx, change `--ingress-class=public` to `--ingress-class=nginx`. Not sure why it's called public in 1.20, but it breaks the default settings in other components if it's not `nginx`
-microk8s.kubectl edit daemonset -n ingress nginx-ingress-microk8s-controller
+kubectl edit daemonset -n ingress nginx-ingress-microk8s-controller
 
-# Set up cluster at this point
-microk8s add-node # on head machine
-microk8s join... # on worker machine
-microk8s.kubectl get nodes # verify!
+# Set up the microk8s cluster. This sequence of steps should be run for each worker node you want to add to the cluster. 
+# Run this command on the head machine
+microk8s add-node 
+# The following output should return. Run this on a worker machine:
+microk8s join <master>:<port>/<token>
+# Once all worker machines are joined, verify the nodes are listed:
+kubectl get nodes 
 
 # Create a new namespace for the cert-manager
-microk8s.kubectl create namespace cert-manager
+kubectl create namespace cert-manager
 
 # Apply the official yaml file 
-microk8s.kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.2.0/cert-manager.yaml
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.2.0/cert-manager.yaml
 
 # Install chectl
 bash <(curl -sL  https://www.eclipse.org/che/chectl/)
@@ -97,14 +103,14 @@ wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/c
 wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/microk8s/ingress-prd.yaml 
 # (updated domain in ingress-prd.yaml)
 
-microk8s.kubectl apply -f prod.yaml
-microk8s.kubectl apply -f ingress-prd.yaml
+kubectl apply -f prod.yaml
+kubectl apply -f ingress-prd.yaml
 
 # Ensure the following returns a value of 'True' before proceeding
-microk8s.kubectl get cert
+kubectl get cert
 
 # Deploy nfs-client-che storage class
-microk8s.kubectl apply -f nfs-client-che-sc.yaml
+kubectl apply -f nfs-client-che-sc.yaml
 
 # Verify microk8s.status, chectl uses this to verify that microk8s is running. If the following command takes too long, set permissions
 # [microk8s.status takes forever (almost 2 minutes) as user but not as sudo · Issue #884 · ubuntu/microk8s · GitHub](https://github.com/ubuntu/microk8s/issues/884)
@@ -117,11 +123,12 @@ chectl server:deploy --installer=operator --platform=microk8s --che-operator-cr-
 # If needed by IT security, do the following
 
 # Ensure http requests are signed in spec/template/spec/containers/args
-microk8s.kubectl  edit daemonset nginx-ingress-microk8s-controller -n ingress
+kubectl  edit daemonset nginx-ingress-microk8s-controller -n ingress
 #  - --default-ssl-certificate=default/default-tls-secret
 
 # Add the following annotation to ensure that *all* http requests are forwarded to https
-microk8s.kubectl  edit ingress
+kubectl  edit ingress
+# In metadata/annotations, add:
 # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
 # DONE!
