@@ -7,6 +7,10 @@ spec:
     cheImageTag: '7.25.2-maap'
     cheImagePullPolicy: Always
     devfileRegistryImage: 'mas.<env>.maap-project.org:5000/root/che-devfile-registry:7.25.2-maap'
+    devfileRegistryPullPolicy: Always
+    serverCpuLimit: 2
+    serverMemoryLimit: 4Gi
+    serverMemoryRequest: 1024Mi
     customCheProperties:
       CHE_LIMITS_USER_WORKSPACES_RUN_COUNT: '-1'
       CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_FS__GROUP: '0'
