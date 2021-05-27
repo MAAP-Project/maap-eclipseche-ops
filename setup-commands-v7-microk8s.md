@@ -162,3 +162,17 @@ sudo iptables -X
 sudo iptables -Z 
 # sudo ip link delete <device> any orphaned network, i.e. things that have `cilium` or `calico` in them
 ```
+
+# Upgrading MicroK8S
+
+Upgrading MicroK8S is a little complicated because the networking can get messed up. That's why we disable snap so that it doesn't do it automatically. To perform an updated in a clustered environment.
+
+1. Take note of the current version in `/var/snap/microk8s`. As of this writing with the `1.20/stable`, I am upgrading from version `2143`.
+2. Restart the `snapd.service` and `snapd.socket`. You may have to wait a few minutes for this to full start up. Otherwise the `microk8s.leave` will not work.
+2. Remove the node to be upgraded from the cluster (make sure the other two nodes are clustered!), following the instructions above in Resetting MicroK8S.
+3. Continue to remove the entire MicroK8S installation.
+4. Once MicroK8S has been removed, **reboot the instance**. There's a phantom MicroK8S web service that keeps running even after removal. Rebooting ensures that it's not.
+5. [Optional] Install any system updates, i.e. apt-get.
+6. Reinstall MicroK8S following instructions above, up to the `STOP HERE` for worker nodes.
+7. Take note of the new version of MicroK8S. As of this writing, the new version is `2213`. Create a link to the new version from the old version. At the time of this writing, it is `cd /var/snap/microk8s; sudo ln -s 2213 2143`. This lets nginx start properly on the node.
+8. Add the node back to one of the nodes of the existing cluster.
