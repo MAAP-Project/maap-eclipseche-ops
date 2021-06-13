@@ -12,6 +12,7 @@ spec:
     serverMemoryLimit: 4Gi
     serverMemoryRequest: 1024Mi
     customCheProperties:
+      CHE_INFRA_KUBERNETES_INGRESS_ANNOTATIONS__JSON: '{"kubernetes.io/ingress.class": nginx, "nginx.ingress.kubernetes.io/rewrite-target": "/$1","nginx.ingress.kubernetes.io/ssl-redirect": true,"nginx.ingress.kubernetes.io/proxy-connect-timeout": "3600","nginx.ingress.kubernetes.io/proxy-read-timeout": "3600","nginx.ingress.kubernetes.io/proxy-body-size":"256m"}'
       CHE_LIMITS_USER_WORKSPACES_RUN_COUNT: '-1'
       CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_FS__GROUP: '0'
       CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_RUN__AS__USER: '0'
