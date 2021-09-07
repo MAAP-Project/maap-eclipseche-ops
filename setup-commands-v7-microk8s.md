@@ -29,7 +29,7 @@ sudo mkdir /efs
 echo "$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone).fs-<EFSID>.efs.us-west-2.amazonaws.com"
 # add the following line to the /etc/fstab file: 
 
-    <mount-target-DNS>:/ /efs nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport,_netdev,fsc 0 0`
+    <mount-target-DNS>:/ /efs nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport,_netdev,fsc 0 0
 
 # [Additional mounting considerations - Amazon Elastic File System](https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-mount-cmd-general.html)
 sudo mount -a
