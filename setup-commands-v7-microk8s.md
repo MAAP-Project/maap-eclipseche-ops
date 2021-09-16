@@ -91,8 +91,8 @@ kubectl create namespace cert-manager
 # Apply the official yaml file 
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.2.0/cert-manager.yaml
 
-# Install chectl
-bash <(curl -sL  https://www.eclipse.org/che/chectl/)
+# Install chectl v7.25.2
+wget -qO- https://github.com/che-incubator/chectl/releases/download/7.25.2/chectl-linux-x64.tar.gz | tar xvz -
 
 wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/maap-k8sconfig-patch.yaml
 wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/nfs-client-che-sc.yaml
