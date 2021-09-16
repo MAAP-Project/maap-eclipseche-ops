@@ -77,9 +77,6 @@ sudo microk8s.enable dns:10.49.0.2; sleep 5; # needed for GCC as it blocks dns q
 # sudo microk8s.enable dns; sleep 5; # needed any normal cluster
 sudo microk8s.enable registry
 
-# Edit ingress daemonset to set ingress class back to nginx, change `--ingress-class=public` to `--ingress-class=nginx`. Not sure why it's called public in 1.20, but it breaks the default settings in other components if it's not `nginx`
-kubectl edit daemonset -n ingress nginx-ingress-microk8s-controller
-
 # Set up the microk8s cluster. This sequence of steps should be run for each worker node you want to add to the cluster. 
 # Run this command on the head machine
 microk8s add-node 

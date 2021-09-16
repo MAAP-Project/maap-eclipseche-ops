@@ -1,22 +1,25 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: default-ingress
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/ingress.class: "public"
 
     # Add the following line (staging first for testing, then apply the prod issuer)
     cert-manager.io/cluster-issuer: "letsencrypt-staging" 
 spec:
   tls:
   - hosts:
-    - ade.che7test.xyz
+    - ade.<env>.maap-project.org # REPLACE
     secretName: default-tls-secret
   rules:
-  - host: ade.che7test.xyz
+  - host: ade.<env>.maap-project.org # REPLACE
   - http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: nginx-deployment
-          servicePort: 80
+          service:
+            name: nginx-deployment
+            port:
+              number: 80
