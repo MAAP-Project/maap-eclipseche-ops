@@ -19,6 +19,14 @@ sudo apt-get install -y iptables-persistent
 # [FS-CACHE for NFS clients | Frederik's Blog](https://blog.frehi.be/2019/01/03/fs-cache-for-nfs-clients/)
 sudo apt-get install -y nfs-common cachefilesd
 # uncomment RUN="yes" in /etc/default/cachefilesd
+# update /etc/cachefilesd.conf to use the following culling settings:
+# brun 70%
+# bcull 67%
+# bstop 63%
+# frun 70%
+# fcull 67%
+# fstop 63%
+
 sudo service cachefilesd start
 ```
 
