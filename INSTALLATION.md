@@ -35,7 +35,7 @@ By default, Keycloak is not configured to connect with any identity providers. F
 
 ### 4) Login to the MAS docker registry
 
-In order to pull MAAP-provisioned Docker images from Eclipse Che, we need to grant Docker access to the registry corresponding to the dev/ops environment where this ADE instance is running. For example: `microk8s.docker login registry.nasa.maap.xyz`
+In order to pull MAAP-provisioned Docker images from Eclipse Che, we need to grant Docker access to the registry corresponding to the dev/ops environment where this ADE instance is running. For example: `microk8s.docker login registry.maap-project.org`
 
 ### 5) Import MAAP Stacks into Che
 
