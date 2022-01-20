@@ -16,7 +16,7 @@ Before running a MAAP Eclipse Che environment, the following core MAAP services 
 
 ### Installation Guide
 
-[INSTALLATION.md](INSTALLATION.md)
+[setup-commands-v7-microk8s.md](setup-commands-v7-microk8s.md)
 
 ### Restoring From Backup
 
