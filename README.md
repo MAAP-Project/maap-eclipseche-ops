@@ -6,7 +6,7 @@ This guide is intended to provide an operational template for configuring and de
 
 Before running a MAAP Eclipse Che environment, the following core MAAP services must be operational:
 
-- [CAS service integrated with URS](https://github.com/MAAP-Project/maap-auth-cas)
+- [Auth Service (CAS integrated with URS)](https://github.com/MAAP-Project/maap-auth-cas)
 - [CMR](https://github.com/MAAP-Project/maap-cmr)
 - [CORE API](https://github.com/MAAP-Project/maap-api-nasa)
 - [DPS](https://github.com/MAAP-Project/maap-dps-packer-templates)
