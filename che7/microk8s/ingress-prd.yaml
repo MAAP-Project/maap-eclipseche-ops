@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: default-ingress
   annotations:
-    kubernetes.io/ingress.class: "public"
+    kubernetes.io/ingress.class: "nginx"
 
     # Add the following line (staging first for testing, then apply the prod issuer)
     cert-manager.io/cluster-issuer: "letsencrypt-prod" 
