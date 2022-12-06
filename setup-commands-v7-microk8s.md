@@ -11,7 +11,7 @@ Create data mount and follow instructions here (https://docs.aws.amazon.com/AWSE
 ```
 sudo lsblk # get device names
 sudo mkfs.xfs /dev/nvme<1n1> # the data volume
-sudo mkfs.xfs /dev/nvme<2n1> # the data volume
+sudo mkfs.xfs /dev/nvme<2n1> # the fscache volume
 sudo lsblk -f # get UUID of new mount
 sudo mkdir /var/cache/fscache
 sudo vi /etc/fstab
