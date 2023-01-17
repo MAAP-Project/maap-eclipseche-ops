@@ -168,10 +168,7 @@ kubectl edit ingress
 # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
 # Disable automatic snap updates to prevent unexpected cluster outages
-sudo systemctl stop snapd.service
-sudo systemctl stop snapd.socket
-sudo systemctl mask snapd.service
-sudo systemctl mask snapd.socket
+sudo snap refresh --hold=forever microk8s
 
 # DONE!
 ```
