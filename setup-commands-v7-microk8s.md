@@ -134,7 +134,7 @@ wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/c
 wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/nfs-client-che-sc.yaml
 wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/microk8s/prod.yaml
 wget https://raw.githubusercontent.com/MAAP-Project/maap-eclipseche-ops/master/che7/microk8s/che-tls.yaml
-# (updated domain in ingress-prd.yaml)
+# (updated domain in che-tls.yaml)
 
 # Create a new namespace for che certificate
 kubectl create namespace eclipse-che
